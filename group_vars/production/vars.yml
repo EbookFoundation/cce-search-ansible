@@ -1,0 +1,7 @@
+---
+# Variables for production server
+
+project_path: "~/cce-search-prototype"
+user_name: "ubuntu"
+git_repo: "https://github.com/EbookFoundation/cce-search-prototype"
+git_branch: "master"

@@ -1,0 +1,46 @@
+---
+- name: Install prod dependencies
+  become: true
+  apt:
+    name: "{{ item }}"
+    update_cache: true
+    state: present
+  with_items:
+    - 'git'
+    - 'pipenv'
+
+- name: Create project directory
+  become: true
+  file:
+    path: "{{ project_path }}"
+    state: directory
+    owner: "{{ user_name }}"
+    mode: 0755
+
+- name: Checkout repo
+  git:
+    accept_hostkey: yes
+    force: yes
+    repo: "{{ git_repo }}"
+    dest: "{{ project_path }}"
+    version: "{{ git_branch }}"
+
+# Source: https://github.com/pypa/pipenv/issues/363#issuecomment-421310544
+- name: Check for venv
+  ignore_errors: true
+  command: "pipenv --venv"
+  args:
+    chdir: "{{ project_path }}"
+  register: pipenv_venv_check_cmd
+  changed_when:
+    - ('No virtualenv' not in pipenv_venv_check_cmd.stderr)
+
+- name: Run pipenv install
+  command: "pipenv install"
+  args:
+    chdir: "{{ project_root }}"
+  when:
+    - ('No virtualenv' in pipenv_venv_check_cmd.stderr) 
+
+
+# TODO: open ports on firewall
