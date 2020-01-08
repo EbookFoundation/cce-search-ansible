@@ -1,14 +1,26 @@
 ---
+# Add necessary apt repositories before installing packages
+- name: Add repositories
+  become: true
+  apt_repository: universe state=present
+  apt_repository: repo='ppa:certbot/certbot' state=present
+
+# Update and Install required apt packages
 - name: Install prod dependencies
   become: true
   apt:
     name: "{{ item }}"
+    update: true
     update_cache: true
     state: present
   with_items:
     - 'git'
     - 'pipenv'
-
+    - 'nginx'
+    - 'software-properties-common'
+    - 'certbot'
+    - 'python-certbot-nginx'
+    
 - name: Create project directory
   become: true
   file:
@@ -43,4 +55,14 @@
     - ('No virtualenv' in pipenv_venv_check_cmd.stderr) 
 
 
-# TODO: open ports on firewall
+# TODO: open ports on firewall --> Can be done with a single config file?
+# NOTE: There is a UFW module added to Ansible as of v 1.6, see here: https://docs.ansible.com/ansible/2.4/ufw_module.html
+
+# TODO: Copy two Nginx config files (general file and specific app file, must copy to repo from server)
+
+# TODO: Enable Nginx
+
+# TODO: Configure HTTPS cert w/ Certbot
+- name: Generate HTTPS cert
+  become: true
+  command: "certbot --nginx"
