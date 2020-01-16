@@ -95,11 +95,9 @@
     group: "{{ user_name }}"
     mode: 0755
   
-
-
 # TODO: Enable Nginx
 
-# TODO: Configure HTTPS cert w/ Certbot
+# Configure HTTPS cert w/ Certbot
 - name: Generate HTTPS cert
   become: true
-  command: "certbot --nginx"
+  command: "certbot --nginx" # Does this command halt for [y/n] input?
