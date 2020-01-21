@@ -95,7 +95,10 @@
     group: "{{ user_name }}"
     mode: 0755
   
-# TODO: Enable Nginx
+# Both start Nginx and enable it to restart on reboot
+- name: Enable Nginx
+  become: yes
+  raw: 'systemctl nginx start && systemctl nginx enable'
 
 # Configure HTTPS cert w/ Certbot
 - name: Generate HTTPS cert
