@@ -1,9 +1,16 @@
 ---
 # Add necessary apt repositories before installing packages
-- name: Add repositories
+- name: Add universe repository
   become: true
-  apt_repository: universe state=present
-  apt_repository: repo='ppa:certbot/certbot' state=present
+  apt_repository: 
+    repo: universe 
+    state: present 
+
+- name: Add certbot repository
+  become: true
+  apt_repository: 
+    repo: 'ppa:certbot/certbot'
+    state: present
 
 # Update and Install required apt packages
 - name: Install prod dependencies
