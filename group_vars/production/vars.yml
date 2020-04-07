@@ -1,7 +1,7 @@
 ---
-# Variables for production server
+# Variables for frontend production server
 
-project_path: "~/cce-search-prototype"
-user_name: "ubuntu"
-git_repo: "https://github.com/EbookFoundation/cce-search-prototype"
-git_branch: "master"
+frontend_project_path: "~/cce-search-prototype"
+frontend_user_name: "ubuntu"
+frontend_git_repo: "https://github.com/EbookFoundation/cce-search-prototype"
+frontend_git_branch: "master"

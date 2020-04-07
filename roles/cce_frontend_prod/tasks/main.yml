@@ -31,25 +31,25 @@
 - name: Create project directory
   become: true
   file:
-    path: "{{ project_path }}"
+    path: "{{ frontend_project_path }}"
     state: directory
-    owner: "{{ user_name }}"
+    owner: "{{ frontend_user_name }}"
     mode: 0755
 
 - name: Checkout repo
   git:
     accept_hostkey: yes
     force: yes
-    repo: "{{ git_repo }}"
-    dest: "{{ project_path }}"
-    version: "{{ git_branch }}"
+    repo: "{{ frontend_git_repo }}"
+    dest: "{{ frontend_project_path }}"
+    version: "{{ frontend_git_branch }}"
 
 # Source: https://github.com/pypa/pipenv/issues/363#issuecomment-421310544
 - name: Check for venv
   ignore_errors: true
   command: "pipenv --venv"
   args:
-    chdir: "{{ project_path }}"
+    chdir: "{{ frontend_project_path }}"
   register: pipenv_venv_check_cmd
   changed_when:
     - ('No virtualenv' not in pipenv_venv_check_cmd.stderr)
@@ -98,8 +98,8 @@
   copy:
     src: cce-search.conf
     dest: /etc/nginx/conf.d/cce-search,conf
-    owner: "{{ user_name }}"
-    group: "{{ user_name }}"
+    owner: "{{ frontend_user_name }}"
+    group: "{{ frontend_user_name }}"
     mode: 0755
   
 # Both start Nginx and enable it to restart on reboot
