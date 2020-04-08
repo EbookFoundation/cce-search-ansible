@@ -5,6 +5,8 @@
   apt_repository: 
     repo: 'deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) universe'
     state: present 
+  # This task causes an update_cache that results in warnings that are interpreted as errors, possibly due to adding the certbot PPA
+  # See https://github.com/ansible/ansible/issues/30754
 
 - name: Add certbot repository
   become: true
@@ -111,3 +113,5 @@
 - name: Generate HTTPS cert
   become: true
   command: "certbot --nginx" # Does this command halt for [y/n] input?
+
+# TODO: Run app
