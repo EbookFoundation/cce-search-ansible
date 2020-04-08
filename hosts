@@ -1,2 +1,2 @@
 [production]
-cce_frontend_prod ansible_host=cce.ebookfoundation.org ansible_user=ubuntu
+cce_prod ansible_host=cce.ebookfoundation.org ansible_user=ubuntu

@@ -3,7 +3,7 @@
 - name: Add universe repository
   become: true
   apt_repository: 
-    repo: 'deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) universe'
+    repo: universe 
     state: present 
 
 - name: Add certbot repository
