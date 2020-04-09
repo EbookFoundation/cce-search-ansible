@@ -15,6 +15,7 @@ $ ansible-playbook -i hosts setup-frontend-prod.yml --key-file="/path/to/key/on/
 
 ### TODO
 1. Complete todos from setup-frontend-prod.yml
+2. Complete refresh-frontend-cert.yml
 2. Automate installation of Python 3.7 and pip3
 3. Create playbook to renew HTTPS cert
 4. Setup Ansible Vault to handle keys

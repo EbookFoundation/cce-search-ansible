@@ -1,0 +1,5 @@
+- hosts: cce_frontend_prod
+  tasks:
+  - name: 'Refresh cert'
+    become: true
+    # TODO: Complete
