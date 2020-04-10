@@ -1,5 +1,8 @@
 - hosts: cce_frontend_prod
   tasks:
+  # - name: 'CD to project dir'
+  #   chdir: '{{ frontend_project_path }}'
   - name: 'Refresh cert'
     become: true
-    # TODO: Complete
+    # Configure HTTPS cert w/ Certbot
+    command: "certbot --nginx" # Does this command halt for [y/n] input?
