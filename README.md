@@ -13,9 +13,21 @@ To deploy, run the `setup-frontend-prod` playbook from within the directory cont
 $ ansible-playbook -i hosts setup-frontend-prod.yml --key-file="/path/to/key/on/your/machine"
 ```  
 
+### Updating
+Once new changes have been added to the master branch of the [frontend repo](https://github.com/EbookFoundation/cce-search-prototype), run `update-frontend-prod` playbook:
+```
+$ ansible-playbook -i hosts update-frontend-prod.yml --key-file="/path/to/key/on/your/machine"
+```
+
+### Manually renewing HTTPS cert
+If Certbot does not automatically renew the HTTPS certificate, run the `refresh-frontend-cert` playbook:
+```
+$ ansible-playbook -i hosts refresh-frontend-cert.yml --key-file="/path/to/key/on/your/machine"
+```
+
 ### TODO
 1. Complete todos from setup-frontend-prod.yml
 2. Complete refresh-frontend-cert.yml
-2. Automate installation of Python 3.7 and pip3
-3. Create playbook to renew HTTPS cert
-4. Setup Ansible Vault to handle keys
+3. Complete update-frontend-prod.yml
+4. Automate installation of Python 3.7 and pip3
+5. Setup Ansible Vault to handle keys

@@ -1,0 +1,32 @@
+- hosts: cce_frontend_prod
+  tasks:
+  # - name: 'CD to project dir'
+  #   chdir: '{{ frontend_project_path }}'
+  - name: Bring down current instance
+    command: 'killall python'
+
+  - name: Pull from GitHub
+    git:
+      accept_hostkey: yes
+      force: yes
+      update: yes
+      repo: "{{ frontend_git_repo }}"
+      dest: "{{ frontend_project_path }}"
+      version: "{{ frontend_git_branch }}"
+
+  # Source: https://github.com/pypa/pipenv/issues/363#issuecomment-421310544
+  - name: Check for venv
+    ignore_errors: true
+    command: "pipenv --venv"
+    args:
+      chdir: "{{ frontend_project_path }}"
+    register: pipenv_venv_check_cmd
+    changed_when:
+      - ('No virtualenv' not in pipenv_venv_check_cmd.stderr)
+
+  - name: Run pipenv install
+    command: "pipenv install"
+    args:
+      chdir: "{{ project_root }}"
+    when:
+      - ('No virtualenv' in pipenv_venv_check_cmd.stderr) 
