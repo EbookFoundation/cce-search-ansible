@@ -1,7 +1,5 @@
 - hosts: cce_frontend_prod
   tasks:
-  # - name: 'CD to project dir'
-  #   chdir: '{{ frontend_project_path }}'
   - name: 'Refresh cert'
     become: true
     # Configure HTTPS cert w/ Certbot

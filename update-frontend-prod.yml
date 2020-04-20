@@ -6,9 +6,9 @@
 
   - name: Pull from GitHub
     git:
-      accept_hostkey: yes
-      force: yes
-      update: yes
+      accept_hostkey: true
+      force: true
+      update: true
       repo: "{{ frontend_git_repo }}"
       dest: "{{ frontend_project_path }}"
       version: "{{ frontend_git_branch }}"

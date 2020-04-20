@@ -29,6 +29,7 @@
     - 'software-properties-common'
     - 'certbot'
     - 'python-certbot-nginx'
+  shell: "python"
     
 - name: Create project directory
   file:
@@ -39,9 +40,9 @@
 
 - name: Checkout repo
   git:
-    accept_hostkey: yes
-    force: yes
-    update: yes
+    accept_hostkey: true
+    force: true
+    update: true
     repo: "{{ frontend_git_repo }}"
     dest: "{{ frontend_project_path }}"
     version: "{{ frontend_git_branch }}"
@@ -96,7 +97,7 @@
     proto: tcp
 
 - name: Copy Nginx config
-  become: yes
+  become: true
   copy:
     src: cce-search.conf
     dest: /etc/nginx/conf.d/cce-search,conf
@@ -106,7 +107,7 @@
   
 # Both start Nginx and enable it to restart on reboot
 - name: Enable Nginx
-  become: yes
+  become: true
   raw: 'systemctl nginx start && systemctl nginx enable'
 
 # Configure HTTPS cert w/ Certbot
