@@ -1,9 +1,8 @@
 - hosts: cce_frontend_prod
   tasks:
-  # - name: 'CD to project dir'
-  #   chdir: '{{ frontend_project_path }}'
+
   - name: Bring down current instance
-    command: 'killall python'
+    command: "killall flask"
 
   - name: Pull from GitHub
     git:
@@ -30,3 +29,8 @@
       chdir: "{{ project_root }}"
     when:
       - ('No virtualenv' in pipenv_venv_check_cmd.stderr) 
+
+  - name: Launch app
+    command: "pipenv run flask run &"
+    args:
+      chdir: "{{ project_root }}"
