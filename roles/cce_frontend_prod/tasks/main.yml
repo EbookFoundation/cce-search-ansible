@@ -29,41 +29,8 @@
     - 'software-properties-common'
     - 'certbot'
     - 'python-certbot-nginx'
-  shell: "python"
+  shell: "python3 -m pip install cffi"
     
-- name: Create project directory
-  file:
-    path: "{{ frontend_project_path }}"
-    state: directory
-    owner: "{{ frontend_user_name }}"
-    mode: 0755
-
-- name: Checkout repo
-  git:
-    accept_hostkey: true
-    force: true
-    update: true
-    repo: "{{ frontend_git_repo }}"
-    dest: "{{ frontend_project_path }}"
-    version: "{{ frontend_git_branch }}"
-
-# Source: https://github.com/pypa/pipenv/issues/363#issuecomment-421310544
-- name: Check for venv
-  ignore_errors: true
-  command: "pipenv --venv"
-  args:
-    chdir: "{{ frontend_project_path }}"
-  register: pipenv_venv_check_cmd
-  changed_when:
-    - ('No virtualenv' not in pipenv_venv_check_cmd.stderr)
-
-- name: Run pipenv install
-  command: "pipenv install"
-  args:
-    chdir: "{{ project_root }}"
-  when:
-    - ('No virtualenv' in pipenv_venv_check_cmd.stderr) 
-
 # There is a UFW module added to Ansible as of v 1.6, see here: https://docs.ansible.com/ansible/2.4/ufw_module.html
 - name: Enable UFW
   ufw: 
@@ -115,4 +82,41 @@
   become: true
   command: "certbot --nginx" # Does this command halt for [y/n] input?
 
-# TODO: Run app
+- name: Create project directory
+  file:
+    path: "{{ frontend_project_path }}"
+    state: directory
+    owner: "{{ frontend_user_name }}"
+    mode: 0755
+
+- name: Checkout repo
+  git:
+    accept_hostkey: true
+    force: true
+    update: true
+    repo: "{{ frontend_git_repo }}"
+    dest: "{{ frontend_project_path }}"
+    version: "{{ frontend_git_branch }}"
+
+# Source: https://github.com/pypa/pipenv/issues/363#issuecomment-421310544
+- name: Check for venv
+  ignore_errors: true
+  command: "pipenv --venv"
+  args:
+    chdir: "{{ frontend_project_path }}"
+  register: pipenv_venv_check_cmd
+  changed_when:
+    - ('No virtualenv' not in pipenv_venv_check_cmd.stderr)
+
+- name: Run pipenv install
+  command: "pipenv install"
+  args:
+    chdir: "{{ project_root }}"
+  when:
+    - ('No virtualenv' in pipenv_venv_check_cmd.stderr) 
+
+# Source: https://ansibledaily.com/execute-detached-process-with-ansible/
+- name: Launch app
+  shell: "(nohup pipenv run flask run </dev/null >/dev/null 2>&1 &)"
+  args:
+    chdir: "{{ frontend_project_path }}"
