@@ -26,11 +26,11 @@
   - name: Run pipenv install
     command: "pipenv install"
     args:
-      chdir: "{{ project_root }}"
+      chdir: "{{ frontend_project_path }}"
     when:
       - ('No virtualenv' in pipenv_venv_check_cmd.stderr) 
 
   - name: Launch app
-    command: "pipenv run flask run &"
+    shell: "pipenv run flask run &"
     args:
-      chdir: "{{ project_root }}"
+      chdir: "{{ frontend_project_path }}"
