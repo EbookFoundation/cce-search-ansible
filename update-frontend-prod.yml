@@ -1,8 +1,14 @@
 - hosts: cce_frontend_prod
   tasks:
 
-  - name: Bring down current instance
+  - name: Check if app is running
+    shell: "ps -few | grep 'flask run' | wc -l"
+    register: num_matches
+
+  # TODO: This command ignores the conditional
+  - name: Bring down current instance if running
     command: "killall flask"
+    when: num_matches.stdout != "1"
 
   - name: Pull from GitHub
     git:

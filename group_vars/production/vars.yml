@@ -5,3 +5,8 @@ frontend_project_path: "~/cce-search-prototype"
 frontend_user_name: "ubuntu"
 frontend_git_repo: "https://github.com/EbookFoundation/cce-search-prototype"
 frontend_git_branch: "master"
+certbot_create_if_missing: false
+certbot_create_method: standalone
+certbot_admin_email: support@ebookfoundation.org
+frontend_hostnames:
+    - {servername: "cce.ebookfoundation.org"}
