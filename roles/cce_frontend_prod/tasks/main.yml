@@ -31,7 +31,6 @@
     - 'python-certbot-nginx'
     
 - name: Create project directory
-  become: true
   file:
     path: "{{ frontend_project_path }}"
     state: directory
