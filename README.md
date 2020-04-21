@@ -32,7 +32,6 @@ $ ansible-playbook -i hosts refresh-frontend-cert.yml --key-file="/path/to/key/o
 ```
 
 ### TODO
-1. Fix error in update-frontend-prod where playbook fails if Flask app isn't already running
-2. Complete setup-frontend-prod.yml
-3. Automate installation of Python 3.7 and pip3
-4. Setup Ansible Vault to handle keys
+1. Complete setup-frontend-prod.yml
+2. Automate installation of Python 3.7 and pip3
+3. Setup Ansible Vault to handle keys
