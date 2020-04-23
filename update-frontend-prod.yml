@@ -2,8 +2,9 @@
   tasks:
 
   - name: Bring down the app if it is running (ignore error msg)
-    command: "killall flask"
+    become: true
     ignore_errors: true
+    command: "systemctl stop cce-search-frontend"
 
   - name: Pull from GitHub
     git:
@@ -31,8 +32,6 @@
     when:
       - ('No virtualenv' in pipenv_venv_check_cmd.stderr) 
 
-  # Source: https://ansibledaily.com/execute-detached-process-with-ansible/
   - name: Launch app
-    shell: "(nohup pipenv run flask run </dev/null >/dev/null 2>&1 &)"
-    args:
-      chdir: "{{ frontend_project_path }}"
+    become: true
+    command: "systemctl start cce-search-frontend"
