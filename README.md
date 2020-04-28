@@ -5,7 +5,7 @@
 ### Pre-requisites
 1. Install `ansible` on your local machine
 2. Ensure you have obtained the SSH key for the server 
-3. Complete server setup if not already done (guide to come)
+3. Complete server setup if not already complete (see CCE-Frontend-System-Information-and-Provisioning-Guide.pdf)
 
 ### Updating and redeploying
 
