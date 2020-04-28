@@ -5,9 +5,7 @@
 ### Pre-requisites
 1. Install `ansible` on your local machine
 2. Ensure you have obtained the SSH key for the server 
-3. Ensure Python 3.7 and pip3 are installed on the server you wish to deploy to
-4. Complete server setup if not already done (guide to come)
-
+3. Complete server setup if not already done (guide to come)
 
 ### Updating and redeploying
 
