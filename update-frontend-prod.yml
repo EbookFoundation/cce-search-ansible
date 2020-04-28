@@ -15,22 +15,17 @@
       dest: "{{ frontend_project_path }}"
       version: "{{ frontend_git_branch }}"
 
-  # Source: https://github.com/pypa/pipenv/issues/363#issuecomment-421310544
-  - name: Check for venv
+  - name: Clear venv if it exists (ignore error msg)
     ignore_errors: true
-    command: "pipenv --venv"
+    command: "pipenv --rm"
     args:
       chdir: "{{ frontend_project_path }}"
-    register: pipenv_venv_check_cmd
-    changed_when:
-      - ('No virtualenv' not in pipenv_venv_check_cmd.stderr)
 
-  - name: Run pipenv install
+  - name: Rebuild venv (ignore error msg)
+    ignore_errors: true
     command: "pipenv install"
     args:
       chdir: "{{ frontend_project_path }}"
-    when:
-      - ('No virtualenv' in pipenv_venv_check_cmd.stderr) 
 
   - name: Launch app
     become: true
