@@ -1,0 +1,4 @@
+- hosts: cce_backend_prod
+  tasks:
+  - include_role:
+            name: cce_backend_prod
