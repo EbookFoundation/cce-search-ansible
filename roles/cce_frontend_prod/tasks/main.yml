@@ -1,95 +1,10 @@
 ---
-# Add necessary apt repositories before installing packages
-- name: Add universe repository
+- name: Bring down the app if it is running (ignore error msg)
   become: true
-  apt_repository: 
-    repo: 'deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) universe'
-    state: present 
-  # This task causes an update_cache that results in warnings that are interpreted as errors, possibly due to adding the certbot PPA
-  # See https://github.com/ansible/ansible/issues/30754
+  ignore_errors: true
+  command: "systemctl stop cce-search-frontend"
 
-- name: Add certbot repository
-  become: true
-  apt_repository: 
-    repo: 'ppa:certbot/certbot'
-    state: present
-
-# Update and Install required apt packages
-- name: Install prod dependencies
-  become: true
-  apt:
-    name: "{{ item }}"
-    update: true
-    update_cache: true
-    state: present
-  with_items:
-    - 'git'
-    - 'pipenv'
-    - 'nginx'
-    - 'software-properties-common'
-    - 'certbot'
-    - 'python-certbot-nginx'
-  shell: "python3 -m pip install cffi"
-    
-# There is a UFW module added to Ansible as of v 1.6, see here: https://docs.ansible.com/ansible/2.4/ufw_module.html
-- name: Enable UFW
-  ufw: 
-    state: enabled
-    policy: disallow # By default, we disallow all connections other than those we specifically allow
-    
-- name: UFW logging on
-  ufw:
-    logging: on
-    
-- name: Allow OpenSSH
-  ufw:
-    rule: allow
-    name: OpenSSH
-    
-- name: Allow Nginx
-  ufw:
-    rule: allow
-    name: Nginx
-
-- name: Allow port 80 tcp
-  ufw:
-    rule: allow
-    port: 80
-    proto: tcp
-    
-- name: Allow port 443 tcp
-  ufw:
-    rule: allow
-    port: 443
-    proto: tcp
-
-- name: Copy Nginx config
-  become: true
-  copy:
-    src: cce-search.conf
-    dest: /etc/nginx/conf.d/cce-search,conf
-    owner: "{{ frontend_user_name }}"
-    group: "{{ frontend_user_name }}"
-    mode: 0755
-  
-# Both start Nginx and enable it to restart on reboot
-- name: Enable Nginx
-  become: true
-  raw: 'systemctl nginx start && systemctl nginx enable'
-
-# Configure HTTPS cert w/ Certbot
-- name: Generate HTTPS cert
-  become: true
-  command: "certbot --nginx" # Does this command halt for [y/n] input?
-
-- name: Create project directory
-  file:
-    path: "{{ frontend_project_path }}"
-    state: directory
-    owner: "{{ frontend_user_name }}"
-    mode: 0755
-
-- name: Checkout repo
+- name: Pull from GitHub
   git:
     accept_hostkey: true
     force: true
@@ -98,25 +13,18 @@
     dest: "{{ frontend_project_path }}"
     version: "{{ frontend_git_branch }}"
 
-# Source: https://github.com/pypa/pipenv/issues/363#issuecomment-421310544
-- name: Check for venv
+- name: Clear venv if it exists (ignore error msg)
   ignore_errors: true
-  command: "pipenv --venv"
+  command: "pipenv --rm"
   args:
     chdir: "{{ frontend_project_path }}"
-  register: pipenv_venv_check_cmd
-  changed_when:
-    - ('No virtualenv' not in pipenv_venv_check_cmd.stderr)
 
-- name: Run pipenv install
+- name: Rebuild venv (ignore error msg)
+  ignore_errors: true
   command: "pipenv install"
   args:
-    chdir: "{{ project_root }}"
-  when:
-    - ('No virtualenv' in pipenv_venv_check_cmd.stderr) 
-
-# Source: https://ansibledaily.com/execute-detached-process-with-ansible/
-- name: Launch app
-  shell: "(nohup pipenv run flask run </dev/null >/dev/null 2>&1 &)"
-  args:
     chdir: "{{ frontend_project_path }}"
+
+- name: Launch app
+  become: true
+  command: "systemctl start cce-search-frontend"

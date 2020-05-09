@@ -13,7 +13,3 @@ Once new changes have been added to the master branch of the [frontend repo](htt
 ```
 $ ansible-playbook -i hosts update-frontend-prod.yml --key-file="/path/to/key/on/your/machine"
 ```
-
-### In-progress Playbooks
-- Manually renew HTTPS cert (refresh-frontend-cert)
-- Initial server provisioning and deployment (setup-frontend-prod)
