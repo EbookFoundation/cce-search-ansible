@@ -1,32 +1,4 @@
 - hosts: cce_frontend_prod
   tasks:
-
-  - name: Bring down the app if it is running (ignore error msg)
-    become: true
-    ignore_errors: true
-    command: "systemctl stop cce-search-frontend"
-
-  - name: Pull from GitHub
-    git:
-      accept_hostkey: true
-      force: true
-      update: true
-      repo: "{{ frontend_git_repo }}"
-      dest: "{{ frontend_project_path }}"
-      version: "{{ frontend_git_branch }}"
-
-  - name: Clear venv if it exists (ignore error msg)
-    ignore_errors: true
-    command: "pipenv --rm"
-    args:
-      chdir: "{{ frontend_project_path }}"
-
-  - name: Rebuild venv (ignore error msg)
-    ignore_errors: true
-    command: "pipenv install"
-    args:
-      chdir: "{{ frontend_project_path }}"
-
-  - name: Launch app
-    become: true
-    command: "systemctl start cce-search-frontend"
+  - include_role:
+            name: cce_frontend_prod
