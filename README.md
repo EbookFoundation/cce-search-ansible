@@ -17,3 +17,13 @@ $ ansible-playbook -i hosts update-frontend-prod.yml --key-file="/path/to/key/on
 ```
 
 ## Backend Server (ec2-18-217-39-134.us-east-2.compute.amazonaws.com)
+
+### Updating and redeploying
+
+***Not yet finished***
+
+*Note: This playbook currently pulls changes from the NYPL's repository, pending completion of our fork*
+
+Once new changes have been added to the master branch of the [backend repo]("https://github.com/NYPL/bardo-copyright-db"), run the `update-backend-prod` playbook:
+```
+$ ansible-playbook -i hosts update-backend-prod.yml --key-file="/path/to/key/on/your/machine"
