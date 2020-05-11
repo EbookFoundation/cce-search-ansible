@@ -11,7 +11,7 @@ frontend_hostnames:
     - {servername: "cce.ebookfoundation.org"}
 
 # Variables for backend production server
-backend_project_path: "~/cce-search-backend"
+backend_project_path: "~/cce-search-backend/bardo-copyright-db"
 backend_user_name: "ubuntu"
 # TODO: Update the git repo once new version is complete
 backend_git_repo: "https://github.com/NYPL/bardo-copyright-db"
