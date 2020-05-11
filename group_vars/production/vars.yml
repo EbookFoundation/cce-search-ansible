@@ -1,6 +1,5 @@
 ---
 # Variables for frontend production server
-
 frontend_project_path: "~/cce-search-frontend"
 frontend_user_name: "ubuntu"
 frontend_git_repo: "https://github.com/EbookFoundation/cce-search-prototype"
@@ -10,3 +9,10 @@ certbot_create_method: standalone
 certbot_admin_email: support@ebookfoundation.org
 frontend_hostnames:
     - {servername: "cce.ebookfoundation.org"}
+
+# Variables for backend production server
+backend_project_path: "~/cce-search-backend"
+backend_user_name: "ubuntu"
+# TODO: Update the git repo once new version is complete
+backend_git_repo: "https://github.com/NYPL/bardo-copyright-db"
+backend_git_branch: "master"
