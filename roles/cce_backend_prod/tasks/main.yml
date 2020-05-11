@@ -1,0 +1,37 @@
+---
+- name: Bring down the app if it is running (ignore error msg)
+  become: true
+  ignore_errors: true
+  shell: "kill $(pgrep -f 'python -m flask run')"
+
+- name: Pull from GitHub
+  git:
+    accept_hostkey: true
+    force: true
+    update: true
+    repo: "{{ backend_git_repo }}"
+    dest: "{{ backend_project_path }}"
+    version: "{{ backend_git_branch }}"
+
+- name: Copy in .env file
+  copy:
+    src: "../files/.env"
+    dest: "{{backend_project_path}}/.env"
+
+- name: Clear venv if it exists (ignore error msg)
+  ignore_errors: true
+  command: "/home/{{backend_user_name}}/.local/bin/pipenv --rm"
+  args:
+    chdir: "{{ backend_project_path }}"
+
+- name: Rebuild venv (ignore error msg)
+  ignore_errors: true
+  command: "/home/{{backend_user_name}}/.local/bin/pipenv install"
+  args:
+    chdir: "{{ backend_project_path }}"
+
+# Source: https://ansibledaily.com/execute-detached-process-with-ansible/ & https://stackoverflow.com/a/10908325
+- name: Launch app
+  shell: "(nohup /home/{{backend_user_name}}/.local/bin/pipenv run python -m flask run </dev/null >/dev/null 2>&1 &)"
+  args:
+     chdir: "{{ backend_project_path }}" 
